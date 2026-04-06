@@ -30,11 +30,10 @@ function App() {
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center" data-ocid="nav.link">
-              <img
-                src="/assets/generated/tapit-logo-transparent.dim_400x200.png"
-                alt="TapIt ID"
-                className="h-8 w-auto object-contain"
-              />
+              <span className="font-display font-extrabold text-xl leading-none">
+                <span className="text-white">TapIt</span>
+                <span style={{ color: "oklch(0.68 0.13 185)" }}>ID</span>
+              </span>
             </div>
 
             <div className="hidden md:flex items-center gap-8">
@@ -149,10 +148,6 @@ function App() {
       </header>
 
       {/* ─── Hero ──────────────────────────────────────────────────── */}
-      {/*
-        P0 fix #2: Richer radial hero gradient, Bricolage Grotesque display
-        font, controlled line-breaks for typographic moment.
-      */}
       <section
         id="how-it-works"
         className="hero-gradient relative overflow-hidden pt-16"
@@ -215,10 +210,6 @@ function App() {
                 DIGITAL BUSINESS CARDS
               </div>
 
-              {/*
-                P0 fix #2: Bricolage Grotesque, very tight tracking,
-                forced line structure for maximum impact.
-              */}
               <h1
                 className="font-display font-extrabold text-white mb-7"
                 style={{
@@ -402,28 +393,23 @@ function App() {
       </section>
 
       {/* ─── Card Showcase ─────────────────────────────────────────── */}
-      {/*
-        P0 fix #1: Dark navy "stage" with multi-layer glow, rimlight, and
-        specular border — makes the card read as a physical premium object.
-        P1 fix: No redundant badge label; chips replaced with clean pill badges.
-      */}
       <section
         id="features"
         className="py-28 relative overflow-hidden"
-        style={{ background: "oklch(0.155 0.042 240)" }}
+        style={{ background: "white" }}
       >
-        {/* Ambient stage light */}
+        {/* Ambient stage light — softened for white bg */}
         <div
           className="absolute inset-0 pointer-events-none overflow-hidden"
           aria-hidden="true"
         >
           <div
             className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] rounded-full blur-3xl"
-            style={{ background: "oklch(0.55 0.22 260 / 0.1)" }}
+            style={{ background: "oklch(0.55 0.22 260 / 0.05)" }}
           />
           <div
             className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] rounded-full blur-3xl"
-            style={{ background: "oklch(0.68 0.13 185 / 0.07)" }}
+            style={{ background: "oklch(0.68 0.13 185 / 0.04)" }}
           />
         </div>
 
@@ -437,8 +423,9 @@ function App() {
             transition={{ duration: 0.6 }}
           >
             <h2
-              className="font-display font-extrabold text-white mb-4"
+              className="font-display font-extrabold mb-4"
               style={{
+                color: "oklch(0.17 0.04 255)",
                 fontSize: "clamp(2rem, 4vw, 3.25rem)",
                 letterSpacing: "-0.03em",
                 lineHeight: 1.08,
@@ -450,7 +437,7 @@ function App() {
             <p
               className="text-base max-w-md mx-auto"
               style={{
-                color: "oklch(0.58 0.025 240)",
+                color: "oklch(0.45 0.03 240)",
                 letterSpacing: "-0.005em",
               }}
             >
@@ -492,7 +479,7 @@ function App() {
             </div>
           </motion.div>
 
-          {/* P1 fix: Clean pill badges — no emoji, dot accent + spaced caps */}
+          {/* Pill badges */}
           <motion.div
             className="flex flex-wrap justify-center gap-3"
             initial={{ opacity: 0, y: 20 }}
@@ -509,9 +496,9 @@ function App() {
                 key={chip.label}
                 className="flex items-center gap-2.5 px-5 py-2.5 rounded-full border"
                 style={{
-                  background: "oklch(1 0 0 / 0.04)",
-                  borderColor: "oklch(1 0 0 / 0.1)",
-                  color: "oklch(0.72 0.025 240)",
+                  background: "oklch(0.95 0.008 240)",
+                  borderColor: "oklch(0.88 0.01 240)",
+                  color: "oklch(0.35 0.03 240)",
                 }}
               >
                 <span
@@ -883,11 +870,10 @@ function App() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
           <div className="flex flex-col items-center gap-6">
-            <img
-              src="/assets/generated/tapit-logo-transparent.dim_400x200.png"
-              alt="TapIt ID"
-              className="h-9 w-auto object-contain opacity-90"
-            />
+            <span className="font-display font-extrabold text-2xl leading-none">
+              <span className="text-white">TapIt</span>
+              <span style={{ color: "oklch(0.68 0.13 185)" }}>ID</span>
+            </span>
             <p
               className="text-sm font-medium"
               style={{
