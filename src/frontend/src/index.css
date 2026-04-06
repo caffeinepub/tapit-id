@@ -1,0 +1,181 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("/assets/fonts/PlusJakartaSans.woff2") format("woff2");
+  font-weight: 300 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("/assets/fonts/BricolageGrotesque.woff2") format("woff2");
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --radius: 0.75rem;
+
+    /* TapIt ID Design Tokens */
+    --navy-deep: 0.175 0.045 240;
+    --navy-mid: 0.195 0.05 240;
+    --blue-cta: 0.55 0.22 260;
+    --teal-accent: 0.68 0.13 185;
+    --teal-light: 0.73 0.14 185;
+
+    --background: 0.975 0.005 240;
+    --foreground: 0.17 0.04 255;
+    --card: 1 0 0;
+    --card-foreground: 0.17 0.04 255;
+    --popover: 1 0 0;
+    --popover-foreground: 0.17 0.04 255;
+    --primary: 0.55 0.22 260;
+    --primary-foreground: 1 0 0;
+    --secondary: 0.95 0.01 240;
+    --secondary-foreground: 0.17 0.04 255;
+    --muted: 0.95 0.01 240;
+    --muted-foreground: 0.5 0.035 240;
+    --accent: 0.68 0.13 185;
+    --accent-foreground: 1 0 0;
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 0.985 0 0;
+    --border: 0.88 0.01 240;
+    --input: 0.88 0.01 240;
+    --ring: 0.55 0.22 260;
+    --chart-1: 0.55 0.22 260;
+    --chart-2: 0.68 0.13 185;
+    --chart-3: 0.398 0.07 227.392;
+    --chart-4: 0.828 0.189 84.429;
+    --chart-5: 0.769 0.188 70.08;
+    --sidebar: 0.175 0.045 240;
+    --sidebar-foreground: 0.985 0 0;
+    --sidebar-primary: 0.55 0.22 260;
+    --sidebar-primary-foreground: 0.985 0 0;
+    --sidebar-accent: 0.195 0.05 240;
+    --sidebar-accent-foreground: 0.985 0 0;
+    --sidebar-border: 1 0 0 / 10%;
+    --sidebar-ring: 0.55 0.22 260;
+  }
+
+  .dark {
+    --background: 0.175 0.045 240;
+    --foreground: 0.985 0 0;
+    --card: 0.195 0.05 240;
+    --card-foreground: 0.985 0 0;
+    --popover: 0.22 0.04 240;
+    --popover-foreground: 0.985 0 0;
+    --primary: 0.55 0.22 260;
+    --primary-foreground: 1 0 0;
+    --secondary: 0.22 0.04 240;
+    --secondary-foreground: 0.985 0 0;
+    --muted: 0.22 0.04 240;
+    --muted-foreground: 0.65 0.02 240;
+    --accent: 0.68 0.13 185;
+    --accent-foreground: 0.175 0.045 240;
+    --destructive: 0.704 0.191 22.216;
+    --destructive-foreground: 0.205 0 0;
+    --border: 1 0 0 / 10%;
+    --input: 1 0 0 / 15%;
+    --ring: 0.55 0.22 260;
+    --chart-1: 0.55 0.22 260;
+    --chart-2: 0.68 0.13 185;
+    --chart-3: 0.769 0.188 70.08;
+    --chart-4: 0.627 0.265 303.9;
+    --chart-5: 0.645 0.246 16.439;
+    --sidebar: 0.15 0.04 240;
+    --sidebar-foreground: 0.985 0 0;
+    --sidebar-primary: 0.55 0.22 260;
+    --sidebar-primary-foreground: 0.985 0 0;
+    --sidebar-accent: 0.22 0.04 240;
+    --sidebar-accent-foreground: 0.985 0 0;
+    --sidebar-border: 1 0 0 / 10%;
+    --sidebar-ring: 0.55 0.22 260;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer utilities {
+  /* P0-fix: Hero display font — Bricolage Grotesque with tight tracking */
+  .font-display {
+    font-family: "Bricolage Grotesque", "Plus Jakarta Sans", system-ui,
+      sans-serif;
+  }
+
+  .text-gradient-blue {
+    background: linear-gradient(
+      118deg,
+      oklch(0.78 0.2 255) 0%,
+      oklch(0.72 0.18 210) 50%,
+      oklch(0.73 0.14 185) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-gradient {
+    background: radial-gradient(
+        ellipse 80% 60% at 70% 40%,
+        oklch(0.26 0.08 250 / 0.6) 0%,
+        transparent 60%
+      ),
+      radial-gradient(
+        ellipse 50% 40% at 20% 80%,
+        oklch(0.28 0.07 200 / 0.4) 0%,
+        transparent 55%
+      ),
+      linear-gradient(
+        160deg,
+        oklch(0.16 0.042 238) 0%,
+        oklch(0.19 0.052 248) 40%,
+        oklch(0.175 0.044 242) 100%
+      );
+  }
+
+  /* P0-fix: Multi-layer card glow for premium stage presentation */
+  .card-stage-glow {
+    /* deep navy base shadow */
+    box-shadow: 0 60px 120px -20px oklch(0.1 0.04 240 / 0.9),
+      /* blue underglow */
+      0 0 80px 0px oklch(0.55 0.22 260 / 0.35), /* teal rim shimmer */ 0 0 0 1px
+      oklch(0.68 0.13 185 / 0.2), /* specular inner highlight */ inset 0 1px 0 0
+      oklch(1 0 0 / 0.12);
+  }
+
+  .card-glow {
+    box-shadow: 0 0 40px oklch(0.55 0.22 260 / 0.25), 0 20px 60px
+      oklch(0.175 0.045 240 / 0.5);
+  }
+
+  .nav-blur {
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+  }
+
+  /* Teal top rule — premium section anchor */
+  .section-teal-rule::before {
+    content: "";
+    display: block;
+    width: 3rem;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      oklch(0.68 0.13 185),
+      oklch(0.55 0.22 260)
+    );
+    margin: 0 auto 2rem;
+    border-radius: 9999px;
+  }
+}
