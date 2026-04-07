@@ -3,15 +3,19 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
+  Check,
+  Copy,
   Download,
   Edit2,
   Globe,
   Mail,
   MapPin,
   Phone,
+  QrCode,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
+import { useEffect, useRef, useState } from "react";
 import { SiFacebook, SiInstagram, SiLinkedin, SiX } from "react-icons/si";
 import type { Profile } from "../backend.d.ts";
 import { useActor } from "../hooks/useActor";
@@ -82,6 +86,27 @@ export function ProfileCardPage({
 
   const profile = record?.profile ?? null;
   const isOwner = !!identity;
+
+  const shareableUrl = `${window.location.origin}${window.location.pathname}?phone=${phone}`;
+  const [copied, setCopied] = useState(false);
+  const qrCanvasRef = useRef<HTMLCanvasElement>(null);
+
+  function handleCopyLink() {
+    navigator.clipboard.writeText(shareableUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
+  function handleDownloadQR() {
+    const canvas = qrCanvasRef.current;
+    if (!canvas) return;
+    const url = canvas.toDataURL("image/png");
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `tapit-qr-${phone}.png`;
+    a.click();
+  }
 
   const fullAddress = [
     profile?.address.street,
@@ -469,6 +494,155 @@ export function ProfileCardPage({
               </div>
             </div>
 
+            {/* Share Your Card section — visible to card owner */}
+            {isOwner && (
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.5,
+                  delay: 0.15,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="rounded-2xl overflow-hidden"
+                style={{
+                  background: "oklch(0.175 0.045 240)",
+                  border: "1px solid oklch(1 0 0 / 0.09)",
+                }}
+                data-ocid="profile.share.panel"
+              >
+                {/* Section header bar */}
+                <div
+                  className="px-6 pt-6 pb-4 flex items-center gap-2.5"
+                  style={{ borderBottom: "1px solid oklch(1 0 0 / 0.07)" }}
+                >
+                  <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center"
+                    style={{
+                      background: "oklch(0.68 0.13 185 / 0.15)",
+                      border: "1px solid oklch(0.68 0.13 185 / 0.25)",
+                    }}
+                  >
+                    <QrCode
+                      className="h-4 w-4"
+                      style={{ color: "oklch(0.68 0.13 185)" }}
+                    />
+                  </div>
+                  <div>
+                    <h2
+                      className="font-semibold text-sm"
+                      style={{ color: "oklch(0.88 0.015 240)" }}
+                    >
+                      Share Your Card
+                    </h2>
+                    <p
+                      className="text-xs"
+                      style={{ color: "oklch(0.5 0.02 240)" }}
+                    >
+                      Use this link or QR code for your NFC tag, sticker, or
+                      prints
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-6 space-y-6">
+                  {/* Shareable URL row */}
+                  <div className="space-y-2">
+                    <p
+                      className="text-xs font-medium uppercase tracking-wide"
+                      style={{ color: "oklch(0.5 0.02 240)" }}
+                    >
+                      Your card link
+                    </p>
+                    <div className="flex gap-2 items-stretch">
+                      <div
+                        className="flex-1 rounded-xl px-3 py-2.5 text-xs font-mono truncate flex items-center min-w-0"
+                        style={{
+                          background: "oklch(0.135 0.042 240)",
+                          border: "1px solid oklch(1 0 0 / 0.1)",
+                          color: "oklch(0.7 0.025 240)",
+                        }}
+                        data-ocid="profile.share.input"
+                      >
+                        <span className="truncate">{shareableUrl}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleCopyLink}
+                        className="shrink-0 rounded-xl px-3.5 flex items-center gap-1.5 text-xs font-semibold transition-all"
+                        style={{
+                          background: copied
+                            ? "oklch(0.68 0.13 185 / 0.2)"
+                            : "oklch(0.55 0.22 260 / 0.18)",
+                          border: copied
+                            ? "1px solid oklch(0.68 0.13 185 / 0.4)"
+                            : "1px solid oklch(0.55 0.22 260 / 0.35)",
+                          color: copied
+                            ? "oklch(0.78 0.12 185)"
+                            : "oklch(0.72 0.15 260)",
+                        }}
+                        data-ocid="profile.share.button"
+                      >
+                        {copied ? (
+                          <>
+                            <Check className="h-3.5 w-3.5" />
+                            Copied!
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="h-3.5 w-3.5" />
+                            Copy
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* QR Code */}
+                  <div className="flex flex-col items-center gap-4">
+                    <div
+                      className="rounded-2xl p-4 inline-block"
+                      style={{
+                        background: "#ffffff",
+                        boxShadow: "0 8px 32px oklch(0.08 0.04 240 / 0.6)",
+                      }}
+                    >
+                      <QRCodeSVG
+                        value={shareableUrl}
+                        size={180}
+                        bgColor="#ffffff"
+                        fgColor="#0f1621"
+                        level="H"
+                        data-ocid="profile.share.canvas_target"
+                      />
+                    </div>
+                    <p
+                      className="text-xs text-center"
+                      style={{ color: "oklch(0.5 0.02 240)" }}
+                    >
+                      Scan to open this card on any device
+                    </p>
+
+                    {/* Download QR button */}
+                    <button
+                      type="button"
+                      onClick={handleDownloadQR}
+                      className="flex items-center gap-2 text-xs font-semibold px-4 py-2.5 rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
+                      style={{
+                        background: "oklch(0.68 0.13 185 / 0.15)",
+                        border: "1px solid oklch(0.68 0.13 185 / 0.3)",
+                        color: "oklch(0.78 0.12 185)",
+                      }}
+                      data-ocid="profile.share.download_button"
+                    >
+                      <Download className="h-3.5 w-3.5" />
+                      Download QR Code
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
             {/* Footer branding */}
             <div className="text-center py-4">
               <p className="text-xs" style={{ color: "oklch(0.38 0.02 240)" }}>
@@ -482,6 +656,21 @@ export function ProfileCardPage({
           </motion.div>
         )}
       </main>
+
+      {/* Hidden QR canvas for PNG download */}
+      <div
+        style={{ position: "absolute", left: "-9999px", top: 0 }}
+        aria-hidden="true"
+      >
+        <QRCodeCanvas
+          ref={qrCanvasRef}
+          value={shareableUrl}
+          size={512}
+          bgColor="#ffffff"
+          fgColor="#0f1621"
+          level="H"
+        />
+      </div>
     </div>
   );
 }

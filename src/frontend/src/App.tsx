@@ -9,7 +9,7 @@ import {
   X,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CreateCardPage } from "./pages/CreateCardPage";
 import { EditCardPage } from "./pages/EditCardPage";
 import { ProfileCardPage } from "./pages/ProfileCardPage";
@@ -958,10 +958,29 @@ function HomePage({ onNavigate }: { onNavigate: (page: Page) => void }) {
 }
 
 function App() {
-  const [page, setPage] = useState<Page>({ type: "home" });
+  const phoneFromUrl = new URLSearchParams(window.location.search).get("phone");
+  const [page, setPage] = useState<Page>(
+    phoneFromUrl ? { type: "view", phone: phoneFromUrl } : { type: "home" },
+  );
+
+  useEffect(() => {
+    const phone = new URLSearchParams(window.location.search).get("phone");
+    if (phone) {
+      setPage({ type: "view", phone });
+    }
+  }, []);
 
   function navigate(p: Page) {
     setPage(p);
+    if (p.type === "view") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("phone", p.phone);
+      window.history.pushState({}, "", url.toString());
+    } else {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("phone");
+      window.history.pushState({}, "", url.toString());
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
