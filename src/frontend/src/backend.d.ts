@@ -7,17 +7,30 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
+export type Time = bigint;
+export interface ProfileRecord {
+    timestamp: Time;
+    profile: Profile;
+}
+export interface ShareBackInput {
+    name: string;
+    email: string;
+    message: string;
+    phone: string;
+}
+export interface ShareBack {
+    name: string;
+    email: string;
+    message: string;
+    timestamp: Time;
+    phone: string;
+}
 export interface ProfileFilter {
     hasPets?: boolean;
     hasElderlyLovedOnes?: boolean;
     firstNameContains?: string;
     companyContains?: string;
 }
-export interface ProfileRecord {
-    timestamp: Time;
-    profile: Profile;
-}
-export type Time = bigint;
 export interface Profile {
     bio: string;
     hasPets: boolean;
@@ -60,8 +73,10 @@ export interface backendInterface {
     getProfileHistory(phone: string): Promise<Array<ProfileRecord>>;
     getProfilesWithElderlyLovedOnes(): Promise<Array<ProfileRecord>>;
     getProfilesWithPets(): Promise<Array<ProfileRecord>>;
+    getShareBacks(ownerPhone: string): Promise<Array<ShareBack>>;
     isCallerAdmin(): Promise<boolean>;
     listProfiles(): Promise<Array<ProfileRecord>>;
     searchProfilesByCompany(company: string): Promise<Array<ProfileRecord>>;
     searchProfilesByName(name: string): Promise<Array<ProfileRecord>>;
+    submitShareBack(ownerPhone: string, input: ShareBackInput): Promise<void>;
 }

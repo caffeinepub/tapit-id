@@ -13,12 +13,14 @@ import { useEffect, useState } from "react";
 import { CreateCardPage } from "./pages/CreateCardPage";
 import { EditCardPage } from "./pages/EditCardPage";
 import { ProfileCardPage } from "./pages/ProfileCardPage";
+import { ShareBackDashboardPage } from "./pages/ShareBackDashboardPage";
 
 type Page =
   | { type: "home" }
   | { type: "create" }
   | { type: "view"; phone: string; successMessage?: string }
-  | { type: "edit"; phone: string };
+  | { type: "edit"; phone: string }
+  | { type: "dashboard"; phone: string };
 
 function HomePage({ onNavigate }: { onNavigate: (page: Page) => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -972,7 +974,7 @@ function App() {
 
   function navigate(p: Page) {
     setPage(p);
-    if (p.type === "view") {
+    if (p.type === "view" || p.type === "dashboard") {
       const url = new URL(window.location.href);
       url.searchParams.set("phone", p.phone);
       window.history.pushState({}, "", url.toString());
@@ -1024,6 +1026,12 @@ function App() {
               navigate(p);
             }
           }}
+        />
+      )}
+      {page.type === "dashboard" && (
+        <ShareBackDashboardPage
+          phone={page.phone}
+          onNavigate={(p) => navigate(p)}
         />
       )}
     </>

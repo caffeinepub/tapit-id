@@ -89,17 +89,30 @@ export class ExternalBlob {
         return this;
     }
 }
+export type Time = bigint;
+export interface ProfileRecord {
+    timestamp: Time;
+    profile: Profile;
+}
+export interface ShareBackInput {
+    name: string;
+    email: string;
+    message: string;
+    phone: string;
+}
+export interface ShareBack {
+    name: string;
+    email: string;
+    message: string;
+    timestamp: Time;
+    phone: string;
+}
 export interface ProfileFilter {
     hasPets?: boolean;
     hasElderlyLovedOnes?: boolean;
     firstNameContains?: string;
     companyContains?: string;
 }
-export interface ProfileRecord {
-    timestamp: Time;
-    profile: Profile;
-}
-export type Time = bigint;
 export interface Profile {
     bio: string;
     hasPets: boolean;
@@ -143,10 +156,12 @@ export interface backendInterface {
     getProfileHistory(phone: string): Promise<Array<ProfileRecord>>;
     getProfilesWithElderlyLovedOnes(): Promise<Array<ProfileRecord>>;
     getProfilesWithPets(): Promise<Array<ProfileRecord>>;
+    getShareBacks(ownerPhone: string): Promise<Array<ShareBack>>;
     isCallerAdmin(): Promise<boolean>;
     listProfiles(): Promise<Array<ProfileRecord>>;
     searchProfilesByCompany(company: string): Promise<Array<ProfileRecord>>;
     searchProfilesByName(name: string): Promise<Array<ProfileRecord>>;
+    submitShareBack(ownerPhone: string, input: ShareBackInput): Promise<void>;
 }
 import type { ProfileFilter as _ProfileFilter, ProfileRecord as _ProfileRecord, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
@@ -319,6 +334,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async getShareBacks(arg0: string): Promise<Array<ShareBack>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getShareBacks(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getShareBacks(arg0);
+            return result;
+        }
+    }
     async isCallerAdmin(): Promise<boolean> {
         if (this.processError) {
             try {
@@ -372,6 +401,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.searchProfilesByName(arg0);
+            return result;
+        }
+    }
+    async submitShareBack(arg0: string, arg1: ShareBackInput): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.submitShareBack(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.submitShareBack(arg0, arg1);
             return result;
         }
     }

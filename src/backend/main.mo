@@ -4,8 +4,6 @@ import Time "mo:core/Time";
 import Array "mo:core/Array";
 import Runtime "mo:core/Runtime";
 import Principal "mo:core/Principal";
-import Iter "mo:core/Iter";
-import INT "mo:core/Int";
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
 
@@ -46,13 +44,8 @@ actor {
     timestamp : Time.Time;
   };
 
-  // Stores persistent profiles by phone number.
   let profiles = Map.empty<Text, ProfileRecord>();
-
-  // Stores persistent profile history by phone number.
   let profileHistory = Map.empty<Text, [ProfileRecord]>();
-
-  // Stores ownership mapping: phone number -> Principal (owner)
   let profileOwners = Map.empty<Text, Principal>();
 
   // Helper function to check if caller owns a profile or is admin
@@ -245,5 +238,51 @@ actor {
       Runtime.trap("Unauthorized: Only admins can delete all profiles");
     };
     Runtime.trap("Restore Mode: Dead End");
+  };
+
+  // --------------------------
+  // Share Back Feature
+  // --------------------------
+
+  public type ShareBackInput = {
+    name : Text;
+    email : Text;
+    phone : Text;
+    message : Text;
+  };
+
+  public type ShareBack = {
+    name : Text;
+    email : Text;
+    phone : Text;
+    message : Text;
+    timestamp : Time.Time;
+  };
+
+  let sharebacks = Map.empty<Text, [ShareBack]>();
+
+  public shared ({ caller }) func submitShareBack(ownerPhone : Text, input : ShareBackInput) : async () {
+    let newShareBack : ShareBack = {
+      input with
+      timestamp = Time.now();
+    };
+
+    let existingShareBacks = switch (sharebacks.get(ownerPhone)) {
+      case (?s) { s };
+      case (null) { [] };
+    };
+
+    let newShareBacks = existingShareBacks.concat([newShareBack].values().toArray());
+    sharebacks.add(ownerPhone, newShareBacks);
+  };
+
+  public query ({ caller }) func getShareBacks(ownerPhone : Text) : async [ShareBack] {
+    if (not isOwnerOrAdmin(caller, ownerPhone)) {
+      Runtime.trap("Unauthorized: Only the profile owner or admin can view these share backs");
+    };
+    switch (sharebacks.get(ownerPhone)) {
+      case (?s) { s };
+      case (null) { [] };
+    };
   };
 };

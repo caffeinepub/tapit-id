@@ -42,6 +42,19 @@ export interface ProfileFilter {
   'companyContains' : [] | [string],
 }
 export interface ProfileRecord { 'timestamp' : Time, 'profile' : Profile }
+export interface ShareBack {
+  'name' : string,
+  'email' : string,
+  'message' : string,
+  'timestamp' : Time,
+  'phone' : string,
+}
+export interface ShareBackInput {
+  'name' : string,
+  'email' : string,
+  'message' : string,
+  'phone' : string,
+}
 export type Time = bigint;
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
@@ -59,10 +72,12 @@ export interface _SERVICE {
   'getProfileHistory' : ActorMethod<[string], Array<ProfileRecord>>,
   'getProfilesWithElderlyLovedOnes' : ActorMethod<[], Array<ProfileRecord>>,
   'getProfilesWithPets' : ActorMethod<[], Array<ProfileRecord>>,
+  'getShareBacks' : ActorMethod<[string], Array<ShareBack>>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'listProfiles' : ActorMethod<[], Array<ProfileRecord>>,
   'searchProfilesByCompany' : ActorMethod<[string], Array<ProfileRecord>>,
   'searchProfilesByName' : ActorMethod<[string], Array<ProfileRecord>>,
+  'submitShareBack' : ActorMethod<[string, ShareBackInput], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

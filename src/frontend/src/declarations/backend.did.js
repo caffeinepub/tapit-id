@@ -49,6 +49,19 @@ export const ProfileRecord = IDL.Record({
   'timestamp' : Time,
   'profile' : Profile,
 });
+export const ShareBack = IDL.Record({
+  'name' : IDL.Text,
+  'email' : IDL.Text,
+  'message' : IDL.Text,
+  'timestamp' : Time,
+  'phone' : IDL.Text,
+});
+export const ShareBackInput = IDL.Record({
+  'name' : IDL.Text,
+  'email' : IDL.Text,
+  'message' : IDL.Text,
+  'phone' : IDL.Text,
+});
 
 export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
@@ -75,6 +88,7 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'getProfilesWithPets' : IDL.Func([], [IDL.Vec(ProfileRecord)], ['query']),
+  'getShareBacks' : IDL.Func([IDL.Text], [IDL.Vec(ShareBack)], ['query']),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'listProfiles' : IDL.Func([], [IDL.Vec(ProfileRecord)], ['query']),
   'searchProfilesByCompany' : IDL.Func(
@@ -87,6 +101,7 @@ export const idlService = IDL.Service({
       [IDL.Vec(ProfileRecord)],
       ['query'],
     ),
+  'submitShareBack' : IDL.Func([IDL.Text, ShareBackInput], [], []),
 });
 
 export const idlInitArgs = [];
@@ -130,6 +145,19 @@ export const idlFactory = ({ IDL }) => {
   });
   const Time = IDL.Int;
   const ProfileRecord = IDL.Record({ 'timestamp' : Time, 'profile' : Profile });
+  const ShareBack = IDL.Record({
+    'name' : IDL.Text,
+    'email' : IDL.Text,
+    'message' : IDL.Text,
+    'timestamp' : Time,
+    'phone' : IDL.Text,
+  });
+  const ShareBackInput = IDL.Record({
+    'name' : IDL.Text,
+    'email' : IDL.Text,
+    'message' : IDL.Text,
+    'phone' : IDL.Text,
+  });
   
   return IDL.Service({
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
@@ -156,6 +184,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'getProfilesWithPets' : IDL.Func([], [IDL.Vec(ProfileRecord)], ['query']),
+    'getShareBacks' : IDL.Func([IDL.Text], [IDL.Vec(ShareBack)], ['query']),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'listProfiles' : IDL.Func([], [IDL.Vec(ProfileRecord)], ['query']),
     'searchProfilesByCompany' : IDL.Func(
@@ -168,6 +197,7 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(ProfileRecord)],
         ['query'],
       ),
+    'submitShareBack' : IDL.Func([IDL.Text, ShareBackInput], [], []),
   });
 };
 
