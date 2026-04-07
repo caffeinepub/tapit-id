@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/sonner";
 import {
   ArrowRight,
   CheckCircle2,
@@ -9,8 +10,17 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
+import { CreateCardPage } from "./pages/CreateCardPage";
+import { EditCardPage } from "./pages/EditCardPage";
+import { ProfileCardPage } from "./pages/ProfileCardPage";
 
-function App() {
+type Page =
+  | { type: "home" }
+  | { type: "create" }
+  | { type: "view"; phone: string; successMessage?: string }
+  | { type: "edit"; phone: string };
+
+function HomePage({ onNavigate }: { onNavigate: (page: Page) => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const currentYear = new Date().getFullYear();
 
@@ -89,6 +99,7 @@ function App() {
                     "oklch(0.55 0.22 260)";
                   (e.currentTarget as HTMLElement).style.boxShadow = "none";
                 }}
+                onClick={() => onNavigate({ type: "create" })}
                 data-ocid="nav.primary_button"
               >
                 Get Started
@@ -137,6 +148,10 @@ function App() {
                   type="button"
                   className="text-sm font-semibold px-5 py-2.5 rounded-xl text-white text-center mt-2"
                   style={{ background: "oklch(0.55 0.22 260)" }}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onNavigate({ type: "create" });
+                  }}
                   data-ocid="nav.primary_button"
                 >
                   Get Started Free
@@ -260,6 +275,7 @@ function App() {
                     (e.currentTarget as HTMLElement).style.boxShadow =
                       "0 2px 0 oklch(0.42 0.22 260), 0 6px 24px oklch(0.55 0.22 260 / 0.3)";
                   }}
+                  onClick={() => onNavigate({ type: "create" })}
                   data-ocid="hero.primary_button"
                 >
                   Create Your Card
@@ -842,6 +858,7 @@ function App() {
                 (e.currentTarget as HTMLElement).style.boxShadow =
                   "0 2px 0 oklch(0.42 0.22 260), 0 8px 32px oklch(0.55 0.22 260 / 0.35)";
               }}
+              onClick={() => onNavigate({ type: "create" })}
               data-ocid="cta.primary_button"
             >
               Get Started Free
@@ -937,6 +954,60 @@ function App() {
         </div>
       </footer>
     </div>
+  );
+}
+
+function App() {
+  const [page, setPage] = useState<Page>({ type: "home" });
+
+  function navigate(p: Page) {
+    setPage(p);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  return (
+    <>
+      <Toaster position="top-center" richColors />
+      {page.type === "home" && <HomePage onNavigate={navigate} />}
+      {page.type === "create" && (
+        <CreateCardPage
+          onNavigate={(p) => {
+            if (p.type === "view") {
+              navigate({
+                type: "view",
+                phone: p.phone,
+                successMessage: "Your card has been created successfully!",
+              });
+            } else {
+              navigate(p);
+            }
+          }}
+        />
+      )}
+      {page.type === "view" && (
+        <ProfileCardPage
+          phone={page.phone}
+          successMessage={page.successMessage}
+          onNavigate={(p) => navigate(p)}
+        />
+      )}
+      {page.type === "edit" && (
+        <EditCardPage
+          phone={page.phone}
+          onNavigate={(p) => {
+            if (p.type === "view") {
+              navigate({
+                type: "view",
+                phone: p.phone,
+                successMessage: "Your card has been updated!",
+              });
+            } else {
+              navigate(p);
+            }
+          }}
+        />
+      )}
+    </>
   );
 }
 

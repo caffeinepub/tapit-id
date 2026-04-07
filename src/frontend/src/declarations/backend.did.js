@@ -8,10 +8,167 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
-export const idlService = IDL.Service({});
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
+});
+export const Profile = IDL.Record({
+  'bio' : IDL.Text,
+  'hasPets' : IDL.Bool,
+  'hasElderlyLovedOnes' : IDL.Bool,
+  'socialLinks' : IDL.Record({
+    'linkedin' : IDL.Text,
+    'twitter' : IDL.Text,
+    'instagram' : IDL.Text,
+    'facebook' : IDL.Text,
+  }),
+  'email' : IDL.Text,
+  'website' : IDL.Text,
+  'company' : IDL.Text,
+  'jobTitle' : IDL.Text,
+  'address' : IDL.Record({
+    'zip' : IDL.Text,
+    'street' : IDL.Text,
+    'country' : IDL.Text,
+    'city' : IDL.Text,
+    'state' : IDL.Text,
+  }),
+  'phone' : IDL.Text,
+  'lastName' : IDL.Text,
+  'firstName' : IDL.Text,
+});
+export const ProfileFilter = IDL.Record({
+  'hasPets' : IDL.Opt(IDL.Bool),
+  'hasElderlyLovedOnes' : IDL.Opt(IDL.Bool),
+  'firstNameContains' : IDL.Opt(IDL.Text),
+  'companyContains' : IDL.Opt(IDL.Text),
+});
+export const Time = IDL.Int;
+export const ProfileRecord = IDL.Record({
+  'timestamp' : Time,
+  'profile' : Profile,
+});
+
+export const idlService = IDL.Service({
+  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'createOrReplaceProfile' : IDL.Func([IDL.Text, Profile], [], []),
+  'deleteAllProfiles' : IDL.Func([], [], []),
+  'deleteProfile' : IDL.Func([IDL.Text], [], []),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getFilteredProfiles' : IDL.Func(
+      [ProfileFilter],
+      [IDL.Vec(ProfileRecord)],
+      ['query'],
+    ),
+  'getProfile' : IDL.Func([IDL.Text], [IDL.Opt(ProfileRecord)], ['query']),
+  'getProfileCount' : IDL.Func([], [IDL.Nat], ['query']),
+  'getProfileHistory' : IDL.Func(
+      [IDL.Text],
+      [IDL.Vec(ProfileRecord)],
+      ['query'],
+    ),
+  'getProfilesWithElderlyLovedOnes' : IDL.Func(
+      [],
+      [IDL.Vec(ProfileRecord)],
+      ['query'],
+    ),
+  'getProfilesWithPets' : IDL.Func([], [IDL.Vec(ProfileRecord)], ['query']),
+  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'listProfiles' : IDL.Func([], [IDL.Vec(ProfileRecord)], ['query']),
+  'searchProfilesByCompany' : IDL.Func(
+      [IDL.Text],
+      [IDL.Vec(ProfileRecord)],
+      ['query'],
+    ),
+  'searchProfilesByName' : IDL.Func(
+      [IDL.Text],
+      [IDL.Vec(ProfileRecord)],
+      ['query'],
+    ),
+});
 
 export const idlInitArgs = [];
 
-export const idlFactory = ({ IDL }) => { return IDL.Service({}); };
+export const idlFactory = ({ IDL }) => {
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
+  });
+  const Profile = IDL.Record({
+    'bio' : IDL.Text,
+    'hasPets' : IDL.Bool,
+    'hasElderlyLovedOnes' : IDL.Bool,
+    'socialLinks' : IDL.Record({
+      'linkedin' : IDL.Text,
+      'twitter' : IDL.Text,
+      'instagram' : IDL.Text,
+      'facebook' : IDL.Text,
+    }),
+    'email' : IDL.Text,
+    'website' : IDL.Text,
+    'company' : IDL.Text,
+    'jobTitle' : IDL.Text,
+    'address' : IDL.Record({
+      'zip' : IDL.Text,
+      'street' : IDL.Text,
+      'country' : IDL.Text,
+      'city' : IDL.Text,
+      'state' : IDL.Text,
+    }),
+    'phone' : IDL.Text,
+    'lastName' : IDL.Text,
+    'firstName' : IDL.Text,
+  });
+  const ProfileFilter = IDL.Record({
+    'hasPets' : IDL.Opt(IDL.Bool),
+    'hasElderlyLovedOnes' : IDL.Opt(IDL.Bool),
+    'firstNameContains' : IDL.Opt(IDL.Text),
+    'companyContains' : IDL.Opt(IDL.Text),
+  });
+  const Time = IDL.Int;
+  const ProfileRecord = IDL.Record({ 'timestamp' : Time, 'profile' : Profile });
+  
+  return IDL.Service({
+    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'createOrReplaceProfile' : IDL.Func([IDL.Text, Profile], [], []),
+    'deleteAllProfiles' : IDL.Func([], [], []),
+    'deleteProfile' : IDL.Func([IDL.Text], [], []),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getFilteredProfiles' : IDL.Func(
+        [ProfileFilter],
+        [IDL.Vec(ProfileRecord)],
+        ['query'],
+      ),
+    'getProfile' : IDL.Func([IDL.Text], [IDL.Opt(ProfileRecord)], ['query']),
+    'getProfileCount' : IDL.Func([], [IDL.Nat], ['query']),
+    'getProfileHistory' : IDL.Func(
+        [IDL.Text],
+        [IDL.Vec(ProfileRecord)],
+        ['query'],
+      ),
+    'getProfilesWithElderlyLovedOnes' : IDL.Func(
+        [],
+        [IDL.Vec(ProfileRecord)],
+        ['query'],
+      ),
+    'getProfilesWithPets' : IDL.Func([], [IDL.Vec(ProfileRecord)], ['query']),
+    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'listProfiles' : IDL.Func([], [IDL.Vec(ProfileRecord)], ['query']),
+    'searchProfilesByCompany' : IDL.Func(
+        [IDL.Text],
+        [IDL.Vec(ProfileRecord)],
+        ['query'],
+      ),
+    'searchProfilesByName' : IDL.Func(
+        [IDL.Text],
+        [IDL.Vec(ProfileRecord)],
+        ['query'],
+      ),
+  });
+};
 
 export const init = ({ IDL }) => { return []; };

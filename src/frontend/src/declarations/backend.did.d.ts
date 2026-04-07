@@ -10,7 +10,60 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export interface _SERVICE {}
+export interface Profile {
+  'bio' : string,
+  'hasPets' : boolean,
+  'hasElderlyLovedOnes' : boolean,
+  'socialLinks' : {
+    'linkedin' : string,
+    'twitter' : string,
+    'instagram' : string,
+    'facebook' : string,
+  },
+  'email' : string,
+  'website' : string,
+  'company' : string,
+  'jobTitle' : string,
+  'address' : {
+    'zip' : string,
+    'street' : string,
+    'country' : string,
+    'city' : string,
+    'state' : string,
+  },
+  'phone' : string,
+  'lastName' : string,
+  'firstName' : string,
+}
+export interface ProfileFilter {
+  'hasPets' : [] | [boolean],
+  'hasElderlyLovedOnes' : [] | [boolean],
+  'firstNameContains' : [] | [string],
+  'companyContains' : [] | [string],
+}
+export interface ProfileRecord { 'timestamp' : Time, 'profile' : Profile }
+export type Time = bigint;
+export type UserRole = { 'admin' : null } |
+  { 'user' : null } |
+  { 'guest' : null };
+export interface _SERVICE {
+  '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'createOrReplaceProfile' : ActorMethod<[string, Profile], undefined>,
+  'deleteAllProfiles' : ActorMethod<[], undefined>,
+  'deleteProfile' : ActorMethod<[string], undefined>,
+  'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getFilteredProfiles' : ActorMethod<[ProfileFilter], Array<ProfileRecord>>,
+  'getProfile' : ActorMethod<[string], [] | [ProfileRecord]>,
+  'getProfileCount' : ActorMethod<[], bigint>,
+  'getProfileHistory' : ActorMethod<[string], Array<ProfileRecord>>,
+  'getProfilesWithElderlyLovedOnes' : ActorMethod<[], Array<ProfileRecord>>,
+  'getProfilesWithPets' : ActorMethod<[], Array<ProfileRecord>>,
+  'isCallerAdmin' : ActorMethod<[], boolean>,
+  'listProfiles' : ActorMethod<[], Array<ProfileRecord>>,
+  'searchProfilesByCompany' : ActorMethod<[string], Array<ProfileRecord>>,
+  'searchProfilesByName' : ActorMethod<[string], Array<ProfileRecord>>,
+}
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];
 export declare const idlFactory: IDL.InterfaceFactory;

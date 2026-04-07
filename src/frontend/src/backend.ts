@@ -89,10 +89,346 @@ export class ExternalBlob {
         return this;
     }
 }
-export interface backendInterface {
+export interface ProfileFilter {
+    hasPets?: boolean;
+    hasElderlyLovedOnes?: boolean;
+    firstNameContains?: string;
+    companyContains?: string;
 }
+export interface ProfileRecord {
+    timestamp: Time;
+    profile: Profile;
+}
+export type Time = bigint;
+export interface Profile {
+    bio: string;
+    hasPets: boolean;
+    hasElderlyLovedOnes: boolean;
+    socialLinks: {
+        linkedin: string;
+        twitter: string;
+        instagram: string;
+        facebook: string;
+    };
+    email: string;
+    website: string;
+    company: string;
+    jobTitle: string;
+    address: {
+        zip: string;
+        street: string;
+        country: string;
+        city: string;
+        state: string;
+    };
+    phone: string;
+    lastName: string;
+    firstName: string;
+}
+export enum UserRole {
+    admin = "admin",
+    user = "user",
+    guest = "guest"
+}
+export interface backendInterface {
+    _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
+    assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    createOrReplaceProfile(phone: string, profile: Profile): Promise<void>;
+    deleteAllProfiles(): Promise<void>;
+    deleteProfile(phone: string): Promise<void>;
+    getCallerUserRole(): Promise<UserRole>;
+    getFilteredProfiles(filter: ProfileFilter): Promise<Array<ProfileRecord>>;
+    getProfile(phone: string): Promise<ProfileRecord | null>;
+    getProfileCount(): Promise<bigint>;
+    getProfileHistory(phone: string): Promise<Array<ProfileRecord>>;
+    getProfilesWithElderlyLovedOnes(): Promise<Array<ProfileRecord>>;
+    getProfilesWithPets(): Promise<Array<ProfileRecord>>;
+    isCallerAdmin(): Promise<boolean>;
+    listProfiles(): Promise<Array<ProfileRecord>>;
+    searchProfilesByCompany(company: string): Promise<Array<ProfileRecord>>;
+    searchProfilesByName(name: string): Promise<Array<ProfileRecord>>;
+}
+import type { ProfileFilter as _ProfileFilter, ProfileRecord as _ProfileRecord, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
+    async _initializeAccessControlWithSecret(arg0: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor._initializeAccessControlWithSecret(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor._initializeAccessControlWithSecret(arg0);
+            return result;
+        }
+    }
+    async assignCallerUserRole(arg0: Principal, arg1: UserRole): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n1(this._uploadFile, this._downloadFile, arg1));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n1(this._uploadFile, this._downloadFile, arg1));
+            return result;
+        }
+    }
+    async createOrReplaceProfile(arg0: string, arg1: Profile): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.createOrReplaceProfile(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.createOrReplaceProfile(arg0, arg1);
+            return result;
+        }
+    }
+    async deleteAllProfiles(): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteAllProfiles();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteAllProfiles();
+            return result;
+        }
+    }
+    async deleteProfile(arg0: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteProfile(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteProfile(arg0);
+            return result;
+        }
+    }
+    async getCallerUserRole(): Promise<UserRole> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getCallerUserRole();
+                return from_candid_UserRole_n3(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getCallerUserRole();
+            return from_candid_UserRole_n3(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getFilteredProfiles(arg0: ProfileFilter): Promise<Array<ProfileRecord>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getFilteredProfiles(to_candid_ProfileFilter_n5(this._uploadFile, this._downloadFile, arg0));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getFilteredProfiles(to_candid_ProfileFilter_n5(this._uploadFile, this._downloadFile, arg0));
+            return result;
+        }
+    }
+    async getProfile(arg0: string): Promise<ProfileRecord | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getProfile(arg0);
+                return from_candid_opt_n7(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getProfile(arg0);
+            return from_candid_opt_n7(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getProfileCount(): Promise<bigint> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getProfileCount();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getProfileCount();
+            return result;
+        }
+    }
+    async getProfileHistory(arg0: string): Promise<Array<ProfileRecord>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getProfileHistory(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getProfileHistory(arg0);
+            return result;
+        }
+    }
+    async getProfilesWithElderlyLovedOnes(): Promise<Array<ProfileRecord>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getProfilesWithElderlyLovedOnes();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getProfilesWithElderlyLovedOnes();
+            return result;
+        }
+    }
+    async getProfilesWithPets(): Promise<Array<ProfileRecord>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getProfilesWithPets();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getProfilesWithPets();
+            return result;
+        }
+    }
+    async isCallerAdmin(): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.isCallerAdmin();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.isCallerAdmin();
+            return result;
+        }
+    }
+    async listProfiles(): Promise<Array<ProfileRecord>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.listProfiles();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.listProfiles();
+            return result;
+        }
+    }
+    async searchProfilesByCompany(arg0: string): Promise<Array<ProfileRecord>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.searchProfilesByCompany(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.searchProfilesByCompany(arg0);
+            return result;
+        }
+    }
+    async searchProfilesByName(arg0: string): Promise<Array<ProfileRecord>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.searchProfilesByName(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.searchProfilesByName(arg0);
+            return result;
+        }
+    }
+}
+function from_candid_UserRole_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserRole): UserRole {
+    return from_candid_variant_n4(_uploadFile, _downloadFile, value);
+}
+function from_candid_opt_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_ProfileRecord]): ProfileRecord | null {
+    return value.length === 0 ? null : value[0];
+}
+function from_candid_variant_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    admin: null;
+} | {
+    user: null;
+} | {
+    guest: null;
+}): UserRole {
+    return "admin" in value ? UserRole.admin : "user" in value ? UserRole.user : "guest" in value ? UserRole.guest : value;
+}
+function to_candid_ProfileFilter_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ProfileFilter): _ProfileFilter {
+    return to_candid_record_n6(_uploadFile, _downloadFile, value);
+}
+function to_candid_UserRole_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): _UserRole {
+    return to_candid_variant_n2(_uploadFile, _downloadFile, value);
+}
+function to_candid_record_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    hasPets?: boolean;
+    hasElderlyLovedOnes?: boolean;
+    firstNameContains?: string;
+    companyContains?: string;
+}): {
+    hasPets: [] | [boolean];
+    hasElderlyLovedOnes: [] | [boolean];
+    firstNameContains: [] | [string];
+    companyContains: [] | [string];
+} {
+    return {
+        hasPets: value.hasPets ? candid_some(value.hasPets) : candid_none(),
+        hasElderlyLovedOnes: value.hasElderlyLovedOnes ? candid_some(value.hasElderlyLovedOnes) : candid_none(),
+        firstNameContains: value.firstNameContains ? candid_some(value.firstNameContains) : candid_none(),
+        companyContains: value.companyContains ? candid_some(value.companyContains) : candid_none()
+    };
+}
+function to_candid_variant_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): {
+    admin: null;
+} | {
+    user: null;
+} | {
+    guest: null;
+} {
+    return value == UserRole.admin ? {
+        admin: null
+    } : value == UserRole.user ? {
+        user: null
+    } : value == UserRole.guest ? {
+        guest: null
+    } : value;
 }
 export interface CreateActorOptions {
     agent?: Agent;
